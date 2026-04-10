@@ -28,7 +28,7 @@ Welcome to my personal portfolio repository! I'm a passionate developer who love
 | Category       | Technologies                          |
 | -------------- | ------------------------------------- |
 | **Frontend**   | HTML, CSS, JavaScript                 |
-| **Hosting**    | GitHub Pages / Custom Domain          |
+| **Hosting**    | Vercel                                |
 | **Version Control** | Git & GitHub                     |
 
 ---
@@ -43,39 +43,6 @@ maharshistech/
 
 ---
 
-## 🔧 Getting Started
-
-To run this project locally:
-
-```bash
-# 1. Clone the repository
-git clone https://github.com/maharshi878/maharshistech.git
-
-# 2. Navigate into the project
-cd maharshistech
-
-# 3. Open in your browser
-open index.html
-```
-
----
-
-## 📡 Push Your Code to GitHub
-
-If you're setting this repo up for the first time, use the following command to link your local project to this GitHub repository:
-
-```bash
-git remote add origin https://github.com/maharshi878/maharshistech.git
-```
-
-Then push your code:
-
-```bash
-git branch -M main
-git push -u origin main
-```
-
----
 
 ## 📬 Contact
 
