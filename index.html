@@ -405,7 +405,15 @@ footer{
   .stack-grid{grid-template-columns:repeat(4,1fr)}
   .fl-header{grid-template-columns:1fr;gap:2rem}
   .contact-split{grid-template-columns:1fr;gap:3rem}
+  .c-link{gap:.75rem}
+  .c-link > div:first-child{min-width:0}
+  .c-val{overflow-wrap:anywhere;word-break:break-word}
   footer{flex-direction:column;gap:.5rem;text-align:center}
+}
+
+@media (hover:none), (pointer:coarse){
+  body{cursor:auto}
+  #cur,#cur-ring{display:none}
 }
 </style>
 </head>
@@ -602,7 +610,7 @@ footer{
         </div>
       </div>
       <div style="margin-top:2rem;padding-top:1.5rem;border-top:1px solid rgba(255,255,255,.06);display:flex;gap:2rem;flex-wrap:wrap;align-items:center">
-        <div style="font-family:var(--mono);font-size:.6rem;letter-spacing:.06em;color:var(--muted)"><span style="color:var(--yellow)">Design</span> — flagship visual work.</div>
+        <div style="font-family:var(--mono);font-size:.6rem;letter-spacing:.06em;color:var(--muted)"><span style="color:var(--yellow)">Design</span> — my flagship visual work.</div>
         <div style="font-family:var(--mono);font-size:.6rem;letter-spacing:.06em;color:var(--muted)"><span style="color:var(--white2)">Integrations?</span> For that, see FreelanceCFO.</div>
       </div>
     </div>
@@ -701,18 +709,24 @@ footer{
 <script>
 // Cursor
 const cur=document.getElementById('cur'),ring=document.getElementById('cur-ring');
-let mx=0,my=0,rx=0,ry=0;
-document.addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY});
-(function loop(){
-  cur.style.transform=`translate(${mx}px,${my}px) translate(-50%,-50%)`;
-  rx+=(mx-rx)*.1; ry+=(my-ry)*.1;
-  ring.style.transform=`translate(${rx}px,${ry}px) translate(-50%,-50%)`;
-  requestAnimationFrame(loop);
-})();
-document.querySelectorAll('a,button').forEach(el=>{
-  el.addEventListener('mouseenter',()=>document.body.classList.add('cursor-hover'));
-  el.addEventListener('mouseleave',()=>document.body.classList.remove('cursor-hover'));
-});
+const customCursorEnabled=window.matchMedia('(hover: hover) and (pointer: fine)').matches;
+if(customCursorEnabled){
+  let mx=0,my=0,rx=0,ry=0;
+  document.addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY});
+  (function loop(){
+    cur.style.transform=`translate(${mx}px,${my}px) translate(-50%,-50%)`;
+    rx+=(mx-rx)*.1; ry+=(my-ry)*.1;
+    ring.style.transform=`translate(${rx}px,${ry}px) translate(-50%,-50%)`;
+    requestAnimationFrame(loop);
+  })();
+  document.querySelectorAll('a,button').forEach(el=>{
+    el.addEventListener('mouseenter',()=>document.body.classList.add('cursor-hover'));
+    el.addEventListener('mouseleave',()=>document.body.classList.remove('cursor-hover'));
+  });
+}else{
+  cur.style.display='none';
+  ring.style.display='none';
+}
 
 // Nav
 const nav=document.getElementById('nav');
