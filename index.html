@@ -436,9 +436,9 @@ footer{
 
 <!-- HERO -->
 <section class="hero" id="hero">
-  <div class="hero-bg-num">15</div>
+  <div class="hero-bg-num" id="hero-bg-num">15</div>
   <div class="hero-content">
-    <div class="hero-pretitle">15 years old &nbsp;·&nbsp; Bharuch, Gujarat &nbsp;·&nbsp; Building crazy stuff.</div>
+    <div class="hero-pretitle" id="hero-pretitle">15 years old &nbsp;·&nbsp; Bharuch, Gujarat &nbsp;·&nbsp; Building crazy stuff.</div>
     <h1 class="hero-title">
       <span class="hero-title-line"><span class="hero-title-inner">MAHARSHI</span></span>
       <span class="hero-title-line"><span class="hero-title-inner">BUILDS</span></span>
@@ -454,7 +454,7 @@ footer{
     <div class="hero-stats">
       <div class="hero-stat"><b>Status</b> Open to freelance</div>
       <div class="hero-stat"><b>Products</b> 2 live</div>
-      <div class="hero-stat"><b>Age</b> 15</div>
+      <div class="hero-stat"><b>Age</b> <span id="hero-age">15</span></div>
       <div class="hero-stat"><b>Location</b> Bharuch, IN</div>
     </div>
   </div>
@@ -707,6 +707,100 @@ footer{
 </footer>
 
 <script>
+// howOldIsMaharshi API
+(async()=>{
+  try{
+    const res=await fetch("https://apis.with.maharshis.tech/how-old-is-maharshi",{cache:"no-store"});
+    if(!res.ok)return;
+    const data=await res.json();
+    const years=data&&data.age&&typeof data.age.years==="number"?data.age.years:null;
+    if(years===null)return;
+
+    const ageEl=document.getElementById("hero-age");
+    if(ageEl)ageEl.textContent=String(years);
+
+    const bgNum=document.getElementById("hero-bg-num");
+    if(bgNum)bgNum.textContent=String(years);
+
+    const pretitle=document.getElementById("hero-pretitle");
+    if(pretitle){
+      pretitle.innerHTML=`${years} years old &nbsp;·&nbsp; Bharuch, Gujarat &nbsp;·&nbsp; Building crazy stuff.`;
+    }
+    const isBirthday=Boolean(data.isBirthday ?? data.bday ?? data.cake ?? data["🎂"]);
+    if(isBirthday){
+      document.body.classList.add("bday-mode");
+
+      const wishHref=document.querySelector(".nav-hire")?.getAttribute("href")||"mailto:maharshipatel878@gmail.com";
+
+      if(!document.getElementById("bday-banner")){
+        const banner=document.createElement("div");
+        banner.id="bday-banner";
+        banner.innerHTML=`IT'S MAHARSHI'S BIRTHDAY - HE'S ${years} TODAY &nbsp;·&nbsp; <a href="${wishHref}" style="color:var(--black);font-weight:700;text-decoration:none">Send a wish</a>`;
+        banner.style.cssText=[
+          "position:fixed","top:0","left:0","right:0","z-index:200",
+          "background:var(--yellow)","color:var(--black)",
+          "font-family:var(--mono)","font-size:.65rem","letter-spacing:.1em",
+          "text-transform:uppercase","text-align:center","padding:10px 2rem"
+        ].join(";");
+        document.body.prepend(banner);
+      }
+
+      const navEl=document.getElementById("nav");
+      if(navEl)navEl.style.top="36px";
+
+      if(!document.getElementById("confetti-canvas")){
+        const canvas=document.createElement("canvas");
+        canvas.id="confetti-canvas";
+        canvas.style.cssText="position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:9997";
+        document.body.appendChild(canvas);
+
+        const ctx=canvas.getContext("2d");
+        if(ctx){
+          const setSize=()=>{canvas.width=window.innerWidth;canvas.height=window.innerHeight};
+          setSize();
+          window.addEventListener("resize",setSize,{passive:true});
+
+          const pieces=Array.from({length:120},()=>({
+            x:Math.random()*canvas.width,
+            y:Math.random()*canvas.height-canvas.height,
+            r:Math.random()*6+3,
+            d:Math.random()*80+20,
+            color:["#FFE135","#FF3B30","#F5F2EB","#c8f04e","#ffffff"][Math.floor(Math.random()*5)],
+            tilt:Math.random()*10-10,
+            tiltAngle:0,
+            tiltSpeed:Math.random()*0.1+0.05
+          }));
+          let angle=0;
+          const drawConfetti=()=>{
+            ctx.clearRect(0,0,canvas.width,canvas.height);
+            angle+=0.008;
+            pieces.forEach(p=>{
+              p.tiltAngle+=p.tiltSpeed;
+              p.y+=Math.cos(angle+p.d)+2;
+              p.x+=Math.sin(angle)*0.8;
+              p.tilt=Math.sin(p.tiltAngle)*12;
+              if(p.y>canvas.height){p.y=-10;p.x=Math.random()*canvas.width}
+              ctx.beginPath();
+              ctx.lineWidth=p.r;
+              ctx.strokeStyle=p.color;
+              ctx.moveTo(p.x+p.tilt+p.r/2,p.y);
+              ctx.lineTo(p.x+p.tilt,p.y+p.tilt+p.r/2);
+              ctx.stroke();
+            });
+            requestAnimationFrame(drawConfetti);
+          };
+          drawConfetti();
+        }
+      }
+
+      const titleLines=document.querySelectorAll(".hero-title-inner");
+      if(titleLines[2])titleLines[2].textContent=`${years}.`;
+    }
+  }catch(_e){
+    // fallback: keep hardcoded values
+  }
+})();
+
 // Cursor
 const cur=document.getElementById('cur'),ring=document.getElementById('cur-ring');
 const customCursorEnabled=window.matchMedia('(hover: hover) and (pointer: fine)').matches;
